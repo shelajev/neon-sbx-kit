@@ -1,0 +1,85 @@
+schemaVersion: "2"
+kind: mixin
+name: neon
+displayName: Neon
+description: Installs the Neon CLI and securely authenticates it so agents can provision, inspect, connect, and link Neon Postgres databases.
+licenses:
+  - Apache-2.0
+
+args:
+  neon-version:
+    default: "3.6.0"
+    description: Neon CLI npm package version
+    pattern: '^(latest|[0-9]+\.[0-9]+\.[0-9]+)$'
+
+credentials:
+  - service: neon
+    description: Neon API key (prefer a project-scoped key for agent use)
+    required: true
+    apiKey:
+      name: NEON_API_KEY
+      proxyManaged: true
+      inject:
+        - domain: console.neon.tech
+          scheme: bearer
+
+permissions:
+  network:
+    allow:
+      # Management API and Console links.
+      - console.neon.tech
+      # Install the CLI and its dependencies.
+      - registry.npmjs.org
+      # Neon Postgres endpoints and hosted Neon services returned by the API.
+      - neon.tech
+      - "*.neon.tech"
+      - "*.neon.tech:5432"
+      # Current endpoint hostnames contain region/cloud labels (for example,
+      # ep-name.us-east-2.aws.neon.tech). Multi-label matching requires an sbx
+      # release that implements the v2 ** wildcard.
+      - "**.neon.tech"
+      - "**.neon.tech:5432"
+
+setup:
+  install:
+    - command: |
+        set -eu
+        command -v npm >/dev/null 2>&1 || {
+          echo "The Neon kit requires npm and Node.js >=20.19.0 in the base sandbox." >&2
+          exit 1
+        }
+        node -e 'const [major, minor] = process.versions.node.split(".").map(Number); if (major < 20 || (major === 20 && minor < 19)) process.exit(1)' || {
+          echo "The Neon kit requires Node.js >=20.19.0; found $(node --version)." >&2
+          exit 1
+        }
+        npm install --global --prefix /home/agent/.local "neon@${{ kit.args.neon-version }}"
+        /home/agent/.local/bin/neon --version
+      user: "1000"
+      description: Install the pinned Neon CLI into the agent user's PATH
+
+agentInstructions:
+  content: |
+    ## Neon
+
+    The `neon` CLI is installed and authenticated with a proxy-managed
+    `NEON_API_KEY`. The real API key stays on the host. Do not run `neon auth`,
+    print the key, copy it into files, or replace the proxy-managed value.
+
+    Use the CLI to manage Neon Serverless Postgres:
+
+    - `neon me --output json` — verify authentication.
+    - `neon projects list --output json` — list accessible projects.
+    - `neon projects create --name <name> --output json` — provision a project.
+    - `neon branches list --project-id <id> --output json` — inspect branches.
+    - `neon branches create --project-id <id> --name <name> --output json` — create an isolated database branch.
+    - `neon connection-string --project-id <id>` — obtain a database URL; do not echo it back to chat.
+    - `neon link --project-id <id> --branch <name>` — link the current project; this also pulls Neon-managed values into `.env`/`.env.local.
+    - `neon env pull` — refresh `DATABASE_URL` and related Neon service URLs.
+    - `neon operations list --project-id <id> --output json` — inspect recent management operations.
+    - `neon status --project-id <id>` and `neon inspect db` — inspect project and database state.
+
+    Before creating, deleting, resetting, or changing production resources,
+    explain the target and obtain the user's approval. Prefer project-scoped API
+    keys and development branches. Connection strings contain database
+    credentials: put them only in ignored local env files or a secret manager,
+    never in source control or chat output.
