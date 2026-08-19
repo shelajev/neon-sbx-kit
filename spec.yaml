@@ -6,12 +6,6 @@ description: Installs the Neon CLI and securely authenticates it so agents can p
 licenses:
   - Apache-2.0
 
-args:
-  neon-version:
-    default: "3.6.0"
-    description: Neon CLI npm package version
-    pattern: '^(latest|[0-9]+\.[0-9]+\.[0-9]+)$'
-
 credentials:
   - service: neon
     description: Neon API key (prefer a project-scoped key for agent use)
@@ -54,7 +48,7 @@ setup:
           echo "The Neon kit requires Node.js >=20.19.0; found $(node --version)." >&2
           exit 1
         }
-        npm install --global --prefix /home/agent/.local "neon@${{ kit.args.neon-version }}"
+        npm install --global --prefix /home/agent/.local neon@3.6.0
         /home/agent/.local/bin/neon --version
       user: "1000"
       description: Install the pinned Neon CLI into the agent user's PATH

@@ -106,7 +106,7 @@ The kit permits `console.neon.tech`, the npm registry used during installation, 
 
 ## CLI version
 
-The default CLI version is pinned in `spec.yaml` for reproducible installs. The kit exposes the `neon-version` kit argument for installers that support v2 argument overrides; pinning the version in published revisions is recommended.
+The CLI version is pinned directly in `spec.yaml` for reproducible installs and compatibility with released `sbx` versions. Update the pinned version in a new kit release when upgrading Neon CLI.
 
 ## Local helper
 
