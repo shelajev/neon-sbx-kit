@@ -46,9 +46,15 @@ jobs:
 
       - name: Install sbx
         run: |
-          curl -fsSL https://get.docker.com | sudo REPO_ONLY=1 sh
-          sudo apt-get update
-          sudo apt-get install -y docker-sbx
+          set -euo pipefail
+          archive="${RUNNER_TEMP}/docker-sbx.tar.gz"
+          curl -fsSL \
+            https://github.com/docker/sbx-releases/releases/download/v0.39.0/DockerSandboxes-linux-amd64.tar.gz \
+            -o "$archive"
+          echo "2ec45bc7938c20c2f406fe8cc72294ad5a954bdc047601484b89bf1a108311d4  $archive" | sha256sum -c -
+          tar -xzf "$archive" -C "$RUNNER_TEMP" docker-sbx/sbx
+          sudo install -m 0755 "$RUNNER_TEMP/docker-sbx/sbx" /usr/local/bin/sbx
+          sbx version
 
       - name: Validate kit
         run: |
