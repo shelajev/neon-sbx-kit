@@ -47,6 +47,14 @@ sbx run claude \
   .
 ```
 
+Or use the versioned kit published on Docker Hub:
+
+```bash
+sbx run claude \
+  --kit docker.io/olegselajev241/neon-sbx-kit:0.1.1 \
+  .
+```
+
 Inside the sandbox, verify access:
 
 ```bash
@@ -102,7 +110,7 @@ The kit declares a required `neon` credential. Docker Sandboxes puts the literal
 
 Connection strings are different: Neon returns them as normal API response data, and they contain database credentials. Treat generated `.env` files as secrets and never commit them.
 
-The kit permits `console.neon.tech`, the npm registry used during installation, GitHub for Neon's official skills repository, and Neon service/database hosts (including PostgreSQL on port 5432). It does not grant access to unrelated providers. Direct database connections whose hostnames contain region and cloud labels require an `sbx` release with v2 multi-label (`**`) network matching; management API operations and retrieving/writing connection strings do not depend on that support.
+The kit permits `console.neon.tech`, the npm registry used during installation, GitHub for Neon's official skills repository, `add-skill.vercel.sh` for the skills CLI's audit/install-reporting flow, and Neon service/database hosts (including PostgreSQL on port 5432). It does not grant access to unrelated providers. Direct database connections whose hostnames contain region and cloud labels require an `sbx` release with v2 multi-label (`**`) network matching; management API operations and retrieving/writing connection strings do not depend on that support.
 
 ## CLI version
 

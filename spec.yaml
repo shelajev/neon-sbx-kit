@@ -26,6 +26,10 @@ permissions:
       - registry.npmjs.org
       # Install Neon's official agent skills from their GitHub repository.
       - github.com
+      - api.github.com
+      - raw.githubusercontent.com
+      # Security audit and install reporting used by the official skills CLI.
+      - add-skill.vercel.sh
       # Neon Postgres endpoints and hosted Neon services returned by the API.
       - neon.tech
       - "*.neon.tech"

@@ -11,6 +11,7 @@ grep -q '^      name: NEON_API_KEY$' "$spec"
 grep -q '^        - domain: console.neon.tech$' "$spec"
 grep -q 'npm install --global --prefix /home/agent/.local neon@3.6.0' "$spec"
 grep -q 'skills@latest add neondatabase/agent-skills -s neon -s neon-postgres -g -y' "$spec"
+grep -q '^      - add-skill.vercel.sh$' "$spec"
 
 bash -n "$repo_dir/run.sh"
 
