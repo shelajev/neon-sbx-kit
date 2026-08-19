@@ -10,6 +10,7 @@ grep -q '^  - service: neon$' "$spec"
 grep -q '^      name: NEON_API_KEY$' "$spec"
 grep -q '^        - domain: console.neon.tech$' "$spec"
 grep -q '"neon@${{ kit.args.neon-version }}"' "$spec"
+grep -q 'skills@latest add neondatabase/agent-skills -s neon -s neon-postgres -g -y' "$spec"
 
 bash -n "$repo_dir/run.sh"
 

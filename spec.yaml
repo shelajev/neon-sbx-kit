@@ -30,6 +30,8 @@ permissions:
       - console.neon.tech
       # Install the CLI and its dependencies.
       - registry.npmjs.org
+      # Install Neon's official agent skills from their GitHub repository.
+      - github.com
       # Neon Postgres endpoints and hosted Neon services returned by the API.
       - neon.tech
       - "*.neon.tech"
@@ -56,6 +58,9 @@ setup:
         /home/agent/.local/bin/neon --version
       user: "1000"
       description: Install the pinned Neon CLI into the agent user's PATH
+    - command: npx --yes skills@latest add neondatabase/agent-skills -s neon -s neon-postgres -g -y
+      user: "1000"
+      description: Install Neon's official overview and Postgres skills globally for compatible agents
 
 agentInstructions:
   content: |
@@ -64,6 +69,10 @@ agentInstructions:
     The `neon` CLI is installed and authenticated with a proxy-managed
     `NEON_API_KEY`. The real API key stays on the host. Do not run `neon auth`,
     print the key, copy it into files, or replace the proxy-managed value.
+
+    Neon's official `neon` and `neon-postgres` agent skills are installed
+    globally under `~/.agents/skills`. Read and follow the relevant skill when
+    working with Neon architecture, connections, drivers, ORMs, or Postgres.
 
     Use the CLI to manage Neon Serverless Postgres:
 

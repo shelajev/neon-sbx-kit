@@ -5,6 +5,7 @@ A Docker Sandboxes mixin kit for [Neon](https://neon.tech). It installs the curr
 ## What you get
 
 - `neon` on `PATH` (the current CLI; `neonctl` is now a compatibility command)
+- Neon's official `neon` and `neon-postgres` agent skills
 - proxy-managed `NEON_API_KEY` authentication to the Neon Management API
 - project and branch provisioning
 - connection strings and project linking through `neon link` / `neon env pull`
@@ -53,6 +54,12 @@ neon me --output json
 neon projects list --output json
 ```
 
+The skills are installed globally under `~/.agents/skills`, so compatible
+agents can discover them without modifying the mounted project. The `neon`
+skill provides the platform overview; `neon-postgres` contains the primary
+development guidance for connections, drivers, ORMs, branching, and database
+best practices.
+
 ## Common workflows
 
 Provision a project and retrieve its connection string:
@@ -95,7 +102,7 @@ The kit declares a required `neon` credential. Docker Sandboxes puts the literal
 
 Connection strings are different: Neon returns them as normal API response data, and they contain database credentials. Treat generated `.env` files as secrets and never commit them.
 
-The kit permits `console.neon.tech`, the npm registry used during installation, and Neon service/database hosts (including PostgreSQL on port 5432). It does not grant access to unrelated providers. Direct database connections whose hostnames contain region and cloud labels require an `sbx` release with v2 multi-label (`**`) network matching; management API operations and retrieving/writing connection strings do not depend on that support.
+The kit permits `console.neon.tech`, the npm registry used during installation, GitHub for Neon's official skills repository, and Neon service/database hosts (including PostgreSQL on port 5432). It does not grant access to unrelated providers. Direct database connections whose hostnames contain region and cloud labels require an `sbx` release with v2 multi-label (`**`) network matching; management API operations and retrieving/writing connection strings do not depend on that support.
 
 ## CLI version
 
