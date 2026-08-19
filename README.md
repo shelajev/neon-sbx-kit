@@ -126,6 +126,30 @@ sbx kit validate /tmp/neon-sbx-kit.zip
 bash tests/smoke.sh
 ```
 
+## Publish to Docker Hub
+
+The GitHub Actions publishing workflow expects these repository secrets:
+
+- `DOCKERHUB_USERNAME`
+- `DOCKERHUB_TOKEN` — a Docker Hub access token with read/write permission
+
+Push a semantic-version tag to validate and publish the kit:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+This publishes:
+
+```text
+docker.io/<DOCKERHUB_USERNAME>/neon-sbx-kit:0.1.0
+```
+
+The workflow can also be started manually from the Actions tab with a version
+input. `sbx kit push` uses Docker's credential store, populated in CI by
+`docker/login-action`.
+
 ## Requirements
 
 The base sandbox must provide npm and Node.js 20.19 or newer. Current Docker Sandboxes coding-agent images satisfy this requirement.
